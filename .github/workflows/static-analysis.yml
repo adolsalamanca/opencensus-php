@@ -1,0 +1,28 @@
+name: static_analysis
+
+on:
+  push:
+    branches: [ test, master]
+  pull_request:
+    branches: [ master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install PHP
+        uses: php-actions/composer@v6
+
+      - name: Run PHPStan
+        uses: php-actions/phpstan@v3
+        with:
+          path: src/
